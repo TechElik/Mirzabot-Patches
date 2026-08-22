@@ -8,10 +8,12 @@
 
 ## نصب سریع
 
+حتما بعد از ورود به منوی نصب اسکریپت اصلی از منوی شماره 2 ورژن 0.3.1 را انتخاب کنید
 ```bash
 # ۱. نصب استاندارد mirzabot (از ریپوی اصلی)
 curl -o install.sh -L https://raw.githubusercontent.com/mahdiMGF2/mirzabot/main/install.sh && bash install.sh
-
+```
+```bash
 # ۲. اعمال این پچ‌ها
 curl -o apply-patches.sh -L https://raw.githubusercontent.com/techelik/mirzabot-patches/main/apply-patches.sh
 sudo bash apply-patches.sh
