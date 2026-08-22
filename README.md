@@ -1,35 +1,43 @@
 # mirzabot-patches
-ضمن تشکر از [توسعه دهنده ربات میرزا](https://github.com/mahdiMGF2/mirzabot) که تغییرات بر روی اسکریپت ورژن 0.3.1 رایگان ایشان اعمال شده است. ورژن اصلی مورد نظر که حتماْ بایستی نصب باشد نگارش 0.3.1 است .
-مسئولیت استفاده از این اسکریپت بر عهده نصب کننده است. خود اسکریپت پوشه اصلی از روی سرور ربات شما پشتیبان تهیه می نماید.اما پشتیبان گیری از پایگاه داده را حتما مدنظر داشته باشید. 
 
-پچ‌های سفارشی برای [mahdiMGF2/mirzabot](https://github.com/mahdiMGF2/mirzabot) — شامل رفع باگ‌های پایداری و افزودن پشتیبانی کامل از ایموجی‌های پرمیوم متحرک تلگرام (روی دکمه‌ها و متن پیام‌ها).
+English | 🌐 [فارسی](./README.fa.md)
 
-## برای آشنایی با نحوه اعمال و درج ایموجی ها حتماً راهنمای زیر را ببینید
+Thanks to the [developer of mirzabot](https://github.com/mahdiMGF2/mirzabot) — these patches are applied on top of their free script, **version 0.3.1**. That exact version is required; other versions may not work correctly.
 
-جزئیات کامل: [DEPLOY_NOTES.md](./DEPLOY_NOTES.md)
+Use of this script is at the installer's own responsibility. The script itself backs up the bot's main folder on your server, but you should always take your own database backup as well.
 
-## نصب سریع
+Custom patches for [mahdiMGF2/mirzabot](https://github.com/mahdiMGF2/mirzabot) — stability bug fixes plus full support for animated Telegram Premium emoji (on both buttons and message text).
 
-حتما بعد از ورود به منوی نصب اسکریپت اصلی از منوی شماره 2 ورژن 0.3.1 را انتخاب کنید.اگر از قبل این ورژن را نصب دارید به مرحله نصب پچ بروید.برای ورژن های دیگر ممکن است برنامه به درستی کار نکند پس حتماً حتماً قبل از آن از دیتابیش SQL خود بکاپ بگیرید.خود اسکرپیت پچ از فولدر اصلی ربات پشتیبان تهیه می کند و آن را در همانند مسیر اصلی پوشه ربات قرار می دهد.امکان بازیابی این پوشه در صورت هر تغییری از منوهای این اسکرپیت وجود دارد.
+## For a full guide on applying and inserting emoji, see the guide below
+
+Full details: [DEPLOY_NOTES.md](./DEPLOY_NOTES.md)
+
+## Quick install
+
+After launching the main installer's menu, make sure to select **version 0.3.1** from menu option 2. If you already have that version installed, skip straight to the patch-install step. Other versions may not work correctly with these patches — always back up your SQL database first regardless.
+
+The patch script itself backs up the bot's main folder before making changes, storing the backup alongside the bot's own folder. You can restore it at any time from the script's own menu.
+
 ```bash
-# ۱. نصب استاندارد mirzabot (از ریپوی اصلی)
-curl -o install.sh -L https://raw.githubusercontent.com/mahdiMGF2/mirzabot/main/install.sh && bash mirza install --version 0.3.1
+# 1. Standard mirzabot install (from the official repo) — pick version 0.3.1 from the menu
+curl -o install.sh -L https://raw.githubusercontent.com/mahdiMGF2/mirzabot/main/install.sh && bash install.sh
 ```
+
 ```bash
-# ۲. اعمال این پچ‌ها
+# 2. Apply these patches
 curl -o apply-patches.sh -L https://raw.githubusercontent.com/techelik/mirzabot-patches/main/apply-patches.sh
 sudo bash apply-patches.sh
 ```
 
-## چیزی که این پچ‌ها اضافه می‌کنن
+## What these patches add
 
-- رفع باگ حساسیت به حروف بزرگ/کوچک `parse_mode` (که مانع نمایش تگ‌های HTML/ایموجی پرمیوم می‌شد)
-- رفع ریسک هنگ‌کردن سرویس در فراخوانی‌های درگاه پرداخت
-- تنظیم خودکار PHP-FPM برای پایداری بیشتر
-- سیستم کامل مدیریت ایموجی پرمیوم از داخل خودِ ربات، برای:
-  - دکمه‌های اصلی کیبورد
-  - دسته‌بندی و نام تک‌تک آموزش‌ها
-  - محصولات و دسته‌بندی‌های فروشگاه
-  - متن آزاد پیام‌ها (قوانین، خوش‌آمدگویی و...)
+- Fixes the `parse_mode` case-sensitivity bug (which prevented HTML tags / premium emoji from rendering at all)
+- Removes the risk of the service hanging in payment-gateway API calls
+- Automatically tunes PHP-FPM for better stability
+- A complete premium-emoji management system, built entirely inside the bot itself, covering:
+  - Main keyboard buttons
+  - Tutorial categories and individual tutorial names
+  - Shop products and shop categories
+  - Free-form message text (rules, welcome message, etc.)
 
-این پروژه یه فورک کامل نیست؛ کنار نصب رسمی mirzabot اجرا می‌شه و `config.php` رو هیچ‌وقت دست نمی‌زنه.
+This project is not a full fork; it runs alongside the official mirzabot install and never touches `config.php`.
