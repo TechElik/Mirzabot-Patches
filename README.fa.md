@@ -20,7 +20,7 @@
 
 ```bash
 # ۱. نصب استاندارد mirzabot (از ریپوی اصلی) — از منو نسخه‌ی 0.3.1 را انتخاب کنید
-curl -o install.sh -L https://raw.githubusercontent.com/mahdiMGF2/mirzabot/main/install.sh && bash mirza install version 0.3.1
+curl -o install.sh -L https://raw.githubusercontent.com/mahdiMGF2/mirzabot/main/install.sh && bash mirza install --version 0.3.1
 ```
 
 ```bash

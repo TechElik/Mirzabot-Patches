@@ -20,7 +20,7 @@ The patch script itself backs up the bot's main folder before making changes, st
 
 ```bash
 # 1. Standard mirzabot install (from the official repo) — pick version 0.3.1 from the menu
-curl -o install.sh -L https://raw.githubusercontent.com/mahdiMGF2/mirzabot/main/install.sh && bash mirza install version 0.3.1
+curl -o install.sh -L https://raw.githubusercontent.com/mahdiMGF2/mirzabot/main/install.sh && bash mirza install --version 0.3.1
 ```
 
 ```bash
