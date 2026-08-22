@@ -1,2 +1,29 @@
 # mirzabot-patches
-mirzabot-patches
+
+پچ‌های سفارشی برای [mahdiMGF2/mirzabot](https://github.com/mahdiMGF2/mirzabot) — شامل رفع باگ‌های پایداری و افزودن پشتیبانی کامل از ایموجی‌های پرمیوم متحرک تلگرام (روی دکمه‌ها و متن پیام‌ها).
+
+جزئیات کامل: [DEPLOY_NOTES.md](./DEPLOY_NOTES.md)
+
+## نصب سریع
+
+```bash
+# ۱. نصب استاندارد mirzabot (از ریپوی اصلی)
+curl -o install.sh -L https://raw.githubusercontent.com/mahdiMGF2/mirzabot/main/install.sh && bash install.sh
+
+# ۲. اعمال این پچ‌ها
+curl -o apply-patches.sh -L https://raw.githubusercontent.com/techelik/mirzabot-patches/main/apply-patches.sh
+sudo bash apply-patches.sh
+```
+
+## چیزی که این پچ‌ها اضافه می‌کنن
+
+- رفع باگ حساسیت به حروف بزرگ/کوچک `parse_mode` (که مانع نمایش تگ‌های HTML/ایموجی پرمیوم می‌شد)
+- رفع ریسک هنگ‌کردن سرویس در فراخوانی‌های درگاه پرداخت
+- تنظیم خودکار PHP-FPM برای پایداری بیشتر
+- سیستم کامل مدیریت ایموجی پرمیوم از داخل خودِ ربات، برای:
+  - دکمه‌های اصلی کیبورد
+  - دسته‌بندی و نام تک‌تک آموزش‌ها
+  - محصولات و دسته‌بندی‌های فروشگاه
+  - متن آزاد پیام‌ها (قوانین، خوش‌آمدگویی و...)
+
+این پروژه یه فورک کامل نیست؛ کنار نصب رسمی mirzabot اجرا می‌شه و `config.php` رو هیچ‌وقت دست نمی‌زنه.
