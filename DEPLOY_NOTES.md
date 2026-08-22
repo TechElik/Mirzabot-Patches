@@ -1,10 +1,12 @@
-# تغییرات این فورک نسبت به نسخه‌ی اصلی mirzabot
+English | 🌐 [فارسی](./DEPLOY_NOTES.fa.md)
 
-آخرین به‌روزرسانی: شامل فیکس‌های پایداری + سیستم کامل آیکون ایموجی پرمیوم برای دکمه‌های کیبورد، دسته‌بندی/نام آموزش‌ها، و محصولات/دسته‌بندی فروشگاه.
+# Changes in this fork compared to the original mirzabot
+
+Latest update: includes stability fixes + a complete premium-emoji icon system for keyboard buttons, tutorial categories/names, and shop products/categories.
 
 ---
 
-## ۱. فایل‌های تغییریافته (۱۷ فایل، همه با `git pull` یا `apply-patches.sh` اعمال می‌شن)
+## 1. Changed files (17 files, all applied via `git pull` or `apply-patches.sh`)
 
 ```
 admin.php
@@ -26,122 +28,122 @@ vpnbot/update/admin.php
 vpnbot/update/index.php
 ```
 
-`config.php` هیچ‌وقت جزو این تغییرات نیست و دست‌نخورده باقی می‌مونه.
+`config.php` is never part of these changes and is always left untouched.
 
 ---
 
-## ۲. فیکس‌های پایداری و باگ
+## 2. Stability and bug fixes
 
-| مورد | توضیح |
+| Item | Description |
 |---|---|
-| `parse_mode` حساس به حروف | `'html'` (حروف کوچک) → `'HTML'` در ۲۳۹ مورد. بدون این فیکس، هیچ تگ HTML (از جمله ایموجی‌های پرمیوم) پردازش نمی‌شد. |
-| تایم‌اوت درگاه‌های پرداخت | ۵ فراخوانی curl در `function.php` که قبلاً `CURLOPT_TIMEOUT => 0` (بی‌نهایت) بودن، الان ۲۰ ثانیه سقف دارن. جلوی هنگ‌کردن دائمی worker های PHP-FPM رو می‌گیره. |
-| تنظیمات PHP-FPM | `install.sh` این پروژه خودکار `request_terminate_timeout = 30s` و `pm.max_children = 12` رو بعد از نصب اعمال می‌کنه. اگه از `apply-patches.sh` استفاده می‌کنی، همین کار رو خودش انجام می‌ده. |
+| Case-sensitive `parse_mode` | `'html'` (lowercase) → `'HTML'` in 239 places. Without this fix, no HTML tag (including premium emoji) was ever parsed. |
+| Payment-gateway timeouts | 5 curl calls in `function.php` that previously used `CURLOPT_TIMEOUT => 0` (unlimited) now cap out at 20 seconds. This prevents PHP-FPM workers from hanging forever. |
+| PHP-FPM tuning | This project's `install.sh` automatically applies `request_terminate_timeout = 30s` and `pm.max_children = 12` after install. If you use `apply-patches.sh`, it does the same thing. |
 
 ---
 
-## ۳. سیستم آیکون ایموجی پرمیوم — همه‌جا از داخل خودِ ربات
+## 3. Premium emoji icon system — fully managed from inside the bot
 
-هیچ‌کدوم از این‌ها نیاز به SSH یا phpMyAdmin ندارن؛ همه از پنل ادمین ربات، با فرستادن مستقیم ایموجی پرمیوم انجام می‌شن (ربات خودش `custom_emoji_id` رو از `entities` پیام استخراج می‌کنه).
+None of this requires SSH or phpMyAdmin; everything is done from the bot's admin panel by sending the premium emoji directly (the bot extracts `custom_emoji_id` from the message's `entities` itself).
 
-### الف) دکمه‌های اصلی کیبورد (۱۴ مورد)
-مسیر: **✏️ ویرایش متن‌های ربات → 🎨 آیکون دکمه‌های کیبورد**
+### a) Main keyboard buttons (14 items)
+Path: **✏️ Edit Bot Texts → 🎨 Keyboard Button Icons**
 
-شامل: خرید اشتراک، سرویس‌های من، تمدید، اکانت تست، کیف پول، افزایش موجودی، تعرفه‌ها، پشتیبانی، آموزش، زیرمجموعه‌گیری، کد هدیه، گردونه شانس، سؤالات متداول، ارسال پیام به پشتیبانی.
+Covers: Buy subscription, My services, Extend, Test account, Wallet, Add balance, Pricing, Support, Tutorials, Referrals, Gift code, Lucky wheel, FAQ, Send message to support.
 
-این لیست **ثابت و همیشگیه** — حتی دکمه‌هایی که الان خاموشن (مثل گردونه شانس) قابل انتخابن، تا وقتی روشن بشن آیکونشون از قبل آماده باشه.
+This list is **fixed and always available** — even buttons that are currently disabled (like the lucky wheel) can be picked, so their icon is already set once they're turned on.
 
-متن این دکمه‌ها هم از همین منو (بدون آیکون، فقط با فرستادن متن جدید) قابل تغییره.
+The text of these buttons can also be changed from the same menu (without an icon, just by sending new text).
 
-ستون دیتابیس: `setting.buttonIcons`
+Database column: `setting.buttonIcons`
 
-### ب) دسته‌بندی و نام تک‌تک آموزش‌ها
-مسیر: پنل ادمین → مدیریت آموزش → یه آموزش رو برای ویرایش انتخاب کن → کیبورد ویرایش این دکمه‌ها رو داره:
+### b) Tutorial categories and individual tutorial names
+Path: admin panel → manage tutorials → pick a tutorial to edit → the edit keyboard has these buttons:
 ```
-[ویرایش نام]        [ویرایش توضیحات]
-[ویرایش رسانه]      [ویرایش دسته‌بندی]
-[🎨 آیکون دسته‌بندی]  [🎨 آیکون آموزش]
+[Edit name]           [Edit description]
+[Edit media]          [Edit category]
+[🎨 Category icon]     [🎨 Tutorial icon]
 ```
-- آیکون دسته‌بندی روی همه‌ی آموزش‌های اون دسته اثر می‌ذاره
-- آیکون آموزش فقط روی همون یه آموزش خاص
+- The category icon affects every tutorial in that category
+- The tutorial icon only affects that one specific tutorial
 
-کار می‌کنه چه قابلیت «دسته‌بندی» روشن باشه چه خاموش.
+Works whether the "category" feature is enabled or disabled.
 
-ستون‌های دیتابیس: `setting.helpCategoryIcons`, `setting.helpNameIcons`
+Database columns: `setting.helpCategoryIcons`, `setting.helpNameIcons`
 
-### ج) محصولات و دسته‌بندی فروشگاه
-- **آیکون محصول:** پنل ادمین → مدیریت محصولات → ویرایش محصول → دکمه‌ی «🎨 آیکون محصول» کنار قیمت/حجم/مدت و بقیه‌ی گزینه‌ها
-- **آیکون دسته‌بندی فروشگاه:** پنل ادمین → مدیریت دسته‌بندی → دکمه‌ی «🎨 آیکون دسته‌بندی فروشگاه» (لیست همه‌ی دسته‌بندی‌ها رو نشون می‌ده، یکی رو انتخاب کن)
+### c) Shop products and shop categories
+- **Product icon:** admin panel → manage products → edit product → the "🎨 Product icon" button next to price/volume/duration and the other options
+- **Shop category icon:** admin panel → manage categories → the "🎨 Shop category icon" button (shows a list of all categories, pick one)
 
-ستون‌های دیتابیس: `setting.productIcons`, `setting.shopCategoryIcons`
+Database columns: `setting.productIcons`, `setting.shopCategoryIcons`
 
 ---
 
-## ۴. کارهایی که باید بعد از هر نصب/آپدیت انجام بشن
+## 4. What to do after every install/update
 
-### با اسکریپت (پیشنهادی)
+### With the script (recommended)
 ```bash
 curl -o apply-patches.sh -L https://raw.githubusercontent.com/techelik/mirzabot-patches/main/apply-patches.sh
 sudo bash apply-patches.sh
 ```
-گزینه‌ی ۱ (Apply) رو بزن — خودش بکاپ می‌گیره، فایل‌ها رو جایگزین می‌کنه، `table.php` رو اجرا می‌کنه، و PHP-FPM رو تنظیم می‌کنه.
+Choose option 1 (Apply) — it backs up automatically, replaces the files, runs `table.php`, and tunes PHP-FPM.
 
-### دستی (اگه اسکریپت رو نمی‌خوای)
-۱. ۱۷ فایل بالا رو جایگزین کن (`config.php` رو دست نزن)
-۲. `php8.2 table.php` رو اجرا کن (برای ستون‌های جدید: `helpCategoryIcons`, `helpNameIcons`, `buttonIcons`, `productIcons`, `shopCategoryIcons`)
-۳. تنظیمات PHP-FPM رو دستی بزن (بخش ۲ همین فایل)
-۴. `sudo systemctl restart php8.2-fpm`
-
----
-
-## ۵. `setup_icons.sql` دیگه ضروری نیست
-
-از وقتی همه‌ی آیکون‌ها از داخل خودِ ربات قابل تنظیم شدن، این فایل SQL دیگه روش اصلی نیست — فقط برای seed کردن گروهی و یکجای چندتا آیکون از قبل (مثلاً موقع migrate کردن یه ربات قدیمی) نگه داشته شده، کاملاً اختیاریه.
+### Manually (if you don't want to use the script)
+1. Replace the 17 files listed above (leave `config.php` untouched)
+2. Run `php8.2 table.php` (for the new columns: `helpCategoryIcons`, `helpNameIcons`, `buttonIcons`, `productIcons`, `shopCategoryIcons`)
+3. Apply the PHP-FPM settings manually (section 2 of this file)
+4. `sudo systemctl restart php8.2-fpm`
 
 ---
 
-## ۶. آموزش: درج ایموجی پرمیوم داخل متونِ متنیِ ربات (نه دکمه‌ها)
+## 5. `setup_icons.sql` is no longer necessary
 
-این بخش جدا از سیستم آیکون دکمه‌هاست — برای وقتیه که می‌خوای وسط یه **متن معمولی** (مثل قوانین، خوش‌آمدگویی، توضیحات، یا هر متنی که از «✏️ ویرایش متن‌های ربات» تغییرش می‌دی) یه ایموجی پرمیوم متحرک بذاری.
+Since every icon can now be set from inside the bot itself, this SQL file is no longer the primary method — it's kept only for bulk-seeding several icons at once ahead of time (e.g. when migrating an older bot), and is entirely optional.
 
-### چرا این با آیکون دکمه‌ها فرق داره
-دکمه‌ها (`icon_custom_emoji_id`) یه فیلد جدا و مستقل از متن دکمه‌ان — ولی متن پیام (مثل قوانین) یه رشته‌ی HTML عادیه که با `parse_mode=HTML` پردازش می‌شه، پس باید ایموجی رو مستقیم **داخل خودِ متن** با یه تگ HTML خاص مشخص کنی.
+---
 
-### مراحل
+## 6. Guide: inserting premium emoji into the bot's free-text messages (not buttons)
 
-**۱. گرفتن شناسه‌ی ایموجی (`custom_emoji_id`)**
-پیام اصلی حاوی همون استیکر پرمیوم متحرک رو به یکی از این ربات‌ها فوروارد کن:
+This is separate from the button icon system — it's for when you want to place an animated premium emoji inside a **regular message** (like the rules, welcome message, or any text you edit from "✏️ Edit Bot Texts").
+
+### Why this differs from button icons
+Buttons (`icon_custom_emoji_id`) use a field that's completely separate from the button's text — but message text (like the rules) is an ordinary HTML string processed with `parse_mode=HTML`, so you have to place the emoji directly **inside the text itself** using a special HTML tag.
+
+### Steps
+
+**1. Get the emoji's identifier (`custom_emoji_id`)**
+Forward the original message containing that animated premium sticker to one of these bots:
 - @RawDataBot
 - @JsonDumpBot
 
-توی جواب JSON که برات می‌فرستن، دنبال بخش `entities` بگرد؛ یه فیلد به اسم `custom_emoji_id` می‌بینی — یه عدد معمولاً ۱۹ رقمی. همون رو کپی کن.
+In the JSON reply they send you, look for the `entities` section; you'll see a field called `custom_emoji_id` — usually a 19-digit number. Copy it.
 
-**۲. ساختن متن نهایی با تگ**
-هرجای متن که می‌خوای ایموجی پرمیوم بیاد، از این تگ استفاده کن:
+**2. Build the final text with the tag**
+Wherever you want the premium emoji to appear in the text, use this tag:
 ```html
-<tg-emoji emoji-id="شناسه_عددی_ایموجی">ایموجی_جایگزین</tg-emoji>
+<tg-emoji emoji-id="THE_EMOJI_NUMERIC_ID">fallback_emoji</tg-emoji>
 ```
-مثال واقعی:
+Real example:
 ```html
-<tg-emoji emoji-id="5312361253610475399">✅</tg-emoji> استفاده از سرویس برای اعمال مجرمانه ممنوع است.
+<tg-emoji emoji-id="5312361253610475399">✅</tg-emoji> Using this service for criminal activity is forbidden.
 ```
-نکته: کاراکتری که بین `<tg-emoji>` و `</tg-emoji>` می‌ذاری (اینجا ✅) همون **حالت جایگزین (fallback)** هست — یعنی اگه به هر دلیلی امکان نمایش انیمیشن نبود (مثلاً owner پرمیوم نبود)، همین ایموجی ساده به‌جاش دیده می‌شه. پس بهتره یه ایموجی نزدیک به شکل اصلی همون استیکر انتخاب کنی.
+Note: the character you place between `<tg-emoji>` and `</tg-emoji>` (here ✅) is the **fallback** — if the animation can't be shown for any reason (e.g. the owner isn't Premium), this plain emoji is shown instead. So pick something visually close to the actual sticker.
 
-**۳. ارسال از مسیر رسمی ربات**
-با اکانت ادمین:
-1. منوی «✏️ ویرایش متن‌های ربات» رو باز کن
-2. متنی که می‌خوای ویرایش کنی رو انتخاب کن (مثلاً «متن قوانین»)
-3. کل متن نهایی (شامل تگ‌های `tg-emoji`) رو یکجا بفرست
+**3. Send it through the bot's official flow**
+As the admin:
+1. Open the "✏️ Edit Bot Texts" menu
+2. Pick the text you want to edit (e.g. "Rules text")
+3. Send the complete final text (including the `tg-emoji` tags) in one message
 
-**۴. تست**
-با یه اکانت **غیرادمین** (چون خیلی از پیام‌های ادمین‌محور برای ادمین نمایش داده نمی‌شن) همون بخش از ربات رو ببین و مطمئن شو ایموجی متحرک نشون داده می‌شه.
+**4. Test**
+Using a **non-admin** account (since many admin-facing messages aren't shown to admins), check that section of the bot and confirm the animated emoji actually renders.
 
-### چند نکته‌ی مهم
-- می‌تونی چند تگ `tg-emoji` (با شناسه‌های متفاوت) توی یه متن واحد داشته باشی.
-- اگه می‌خوای ایموجی **بزرگ‌تر از حد معمول** دیده بشه، باید به‌تنهایی و بدون هیچ متن دیگه‌ای (حتی فاصله) توی یه خط جدا باشه — تلگرام خودش پاراگراف‌های فقط-ایموجی رو بزرگ‌تر رندر می‌کنه؛ این رفتار کلاینت تلگراممه، نه چیزی که از سمت ربات قابل کنترل باشه.
-- همون پیش‌نیاز همیشگی برقراره: owner ربات (اکانتی که در BotFather ساخته) باید Telegram Premium داشته باشه.
-- اگه بعد از رعایت همه‌ی این مراحل بازم فقط ایموجی ساده (fallback) رو می‌بینی، دو تا علت محتمل داره: یا owner پرمیوم نیست، یا شناسه‌ی ایموجی اشتباه/ناقص کپی شده (باید دقیقاً همون عدد کامل خروجی RawDataBot باشه).
+### A few important notes
+- You can have multiple `tg-emoji` tags (with different IDs) in a single piece of text.
+- If you want the emoji to render **larger than normal**, it needs to be alone on its own line with no other text at all (not even a space) — Telegram automatically renders emoji-only paragraphs larger; this is client-side behavior, not something the bot can control.
+- The same requirement as always applies: the bot's owner account (the one that created it in BotFather) must have Telegram Premium.
+- If you've followed all these steps and still only see the plain fallback emoji, there are two likely causes: either the owner isn't Premium, or the emoji ID was copied incorrectly/incompletely (it must be the exact full number from RawDataBot's output).
 
-## ۷. پیش‌نیاز اجباری تلگرام
+## 7. Mandatory Telegram requirement
 
-اکانتی که ربات رو در BotFather ساخته (owner واقعی، نه صرفاً ادمین داخلی ربات) باید **Telegram Premium** فعال داشته باشه — وگرنه هیچ‌کدوم از این آیکون‌ها متحرک نمایش داده نمی‌شن و فقط حالت جایگزین (fallback emoji) دیده می‌شه.
+The account that created the bot in BotFather (the actual owner, not just an internal bot admin) must have an active **Telegram Premium** subscription — otherwise none of these icons will render as animated, and only the fallback emoji will be shown.
