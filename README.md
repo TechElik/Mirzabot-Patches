@@ -13,7 +13,7 @@
 حتما بعد از ورود به منوی نصب اسکریپت اصلی از منوی شماره 2 ورژن 0.3.1 را انتخاب کنید
 ```bash
 # ۱. نصب استاندارد mirzabot (از ریپوی اصلی)
-curl -o install.sh -L https://raw.githubusercontent.com/mahdiMGF2/mirzabot/main/install.sh && bash install.sh
+curl -o install.sh -L https://raw.githubusercontent.com/mahdiMGF2/mirzabot/main/install.sh && bash mirza install --version 0.3.1
 ```
 ```bash
 # ۲. اعمال این پچ‌ها
