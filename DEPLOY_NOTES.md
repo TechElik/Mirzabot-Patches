@@ -6,7 +6,7 @@ Latest update: includes stability fixes + a complete premium-emoji icon system f
 
 ---
 
-## 1. Changed files (17 files, all applied via `git pull` or `apply-patches.sh`)
+## 1. Changed files (18 files, all applied via `git pull` or `apply-patches.sh`)
 
 ```
 admin.php
@@ -17,6 +17,7 @@ keyboard.php
 lang/fa.php
 api/miniapp.php
 api/users.php
+cronbot/backupbot.php
 cronbot/gift.php
 cronbot/lottery.php
 cronbot/payment_expire.php
