@@ -10,9 +10,11 @@ Use of these scripts is at the installer's own responsibility. Always back up yo
 
 ---
 
-## Two install methods — which one do I need?
+## Install methods — which one do I need?
 
-### 🆕 Method 1: Fresh full install (if you don't have the bot installed at all)
+There are two ways to get a fully patched bot: run our `install.sh` directly for a one-shot fresh install, or run `apply-patches.sh`, which gives you an interactive menu covering every scenario (fresh install, updating an old version, patching an existing 0.3.1 install, and backup management).
+
+### 🆕 Option A: Fresh full install (if you don't have the bot installed at all)
 
 This runs the **same official mirzabot installer**, except every file already includes the stability fixes and premium-emoji features — no separate patch step needed.
 
@@ -22,16 +24,24 @@ curl -o install.sh -L https://raw.githubusercontent.com/TechElik/Mirzabot-Patche
 
 After launching it, just follow the standard mirzabot install menu as usual (domain, bot token, database info, etc.).
 
-### 🔧 Method 2: Patch only (if you already have mirzabot 0.3.1 installed)
-
-If you already installed the bot and just want to add these fixes and emoji features **on top of your existing install**, without reinstalling:
+### 🔧 Option B: The `apply-patches.sh` menu (recommended — covers every case)
 
 ```bash
 curl -o apply-patches.sh -L https://raw.githubusercontent.com/TechElik/Mirzabot-Patches/main/apply-patches.sh
 sudo bash apply-patches.sh
 ```
 
-Choose "Apply custom patches" from the menu. The script backs everything up before making any change, and can restore it as well.
+This opens a menu with 5 options:
+
+| # | Option | Who it's for |
+|---|---|---|
+| 1 | Install pre-patched version from scratch | You have **no bot installed** yet — same as Option A above, run from inside the menu |
+| 2 | Update existing install to base version 0.3.1 | You already have mirzabot installed, but an **older version** than 0.3.1 — brings it up to 0.3.1 using the official installer (does **not** apply our patches by itself) |
+| 3 | Apply custom patches | You already have **mirzabot 0.3.1** installed — applies our fixes and premium-emoji features on top, with automatic backup |
+| 4 | Restore a backup | Roll back to a previous backup taken by option 3 |
+| 5 | Delete old backups | Free up disk space |
+
+If you're on an old version, run **option 2** first, then **option 3** right after — that's the full path from an old install to a fully patched one.
 
 **⚠️ Important:** these patches were only tested against version **0.3.1**. Other versions may not work correctly — always back up your SQL database first regardless.
 

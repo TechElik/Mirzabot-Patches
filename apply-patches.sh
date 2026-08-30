@@ -47,6 +47,57 @@ function require_bot_installed() {
     return 0
 }
 
+function install_fresh_patched() {
+    banner
+    echo -e "${C_KEY}▶ Install pre-patched version from scratch${CR}\n"
+    echo -e "  ${C_DIM}For users who do NOT have mirzabot installed yet and want a fresh install${CR}"
+    echo -e "  ${C_DIM}that already includes all stability fixes and the premium emoji system.${CR}\n"
+
+    if [ -f "$BOT_DIR/config.php" ]; then
+        echo -e "  ${C_WARN}Warning:${CR} mirzabot already appears to be installed in $BOT_DIR."
+        echo -e "  This option runs a fresh installer meant for a clean server."
+    fi
+    read -rp "  Continue with a fresh install? (type yes to confirm) " confirm
+    if [ "$confirm" != "yes" ]; then
+        echo "  Cancelled."
+        pause
+        main_menu
+        return
+    fi
+
+    echo -e "\n  ${C_DIM}Downloading and running our pre-patched installer...${CR}\n"
+    curl -o /tmp/mirza-install.sh -L "https://raw.githubusercontent.com/techelik/mirzabot-patches/main/install.sh" \
+        && bash /tmp/mirza-install.sh
+
+    pause
+    main_menu
+}
+
+function update_to_baseline() {
+    banner
+    echo -e "${C_KEY}▶ Update existing installation to base version 0.3.1${CR}\n"
+    echo -e "  ${C_DIM}For users who have an OLDER version of the original mirzabot installed${CR}"
+    echo -e "  ${C_DIM}and need to bring it up to version 0.3.1 first, before applying our patches${CR}"
+    echo -e "  ${C_DIM}(option 3 in this menu). This step alone does NOT apply our patches.${CR}\n"
+
+    read -rp "  Continue updating to 0.3.1? (type yes to confirm) " confirm
+    if [ "$confirm" != "yes" ]; then
+        echo "  Cancelled."
+        pause
+        main_menu
+        return
+    fi
+
+    echo -e "\n  ${C_DIM}Downloading the official installer and updating to 0.3.1...${CR}\n"
+    curl -o install.sh -L "https://raw.githubusercontent.com/mahdiMGF2/mirzabot/main/install.sh"
+    chmod +x install.sh
+    bash install.sh update --version 0.3.1
+
+    echo -e "\n  ${C_OK}●${CR} If the update finished successfully, run option 3 (Apply custom patches) next."
+    pause
+    main_menu
+}
+
 function apply_patches() {
     banner
     echo -e "${C_KEY}▶ Apply patches${CR}\n"
@@ -206,16 +257,20 @@ function delete_old_backups() {
 
 function main_menu() {
     banner
-    echo -e "  ${C_KEY}[1]${CR}  Apply custom patches (auto-backup included)"
-    echo -e "  ${C_KEY}[2]${CR}  Restore a backup"
-    echo -e "  ${C_KEY}[3]${CR}  Delete old backups"
+    echo -e "  ${C_KEY}[1]${CR}  Install pre-patched version from scratch ${C_DIM}(no bot installed yet)${CR}"
+    echo -e "  ${C_KEY}[2]${CR}  Update existing install to base version 0.3.1 ${C_DIM}(older version installed)${CR}"
+    echo -e "  ${C_KEY}[3]${CR}  Apply custom patches ${C_DIM}(0.3.1 already installed, auto-backup included)${CR}"
+    echo -e "  ${C_KEY}[4]${CR}  Restore a backup"
+    echo -e "  ${C_KEY}[5]${CR}  Delete old backups"
     echo -e "  ${C_KEY}[0]${CR}  Exit"
     echo ""
     read -rp "  ❯ Your choice: " choice
     case "$choice" in
-        1) apply_patches ;;
-        2) restore_backup ;;
-        3) delete_old_backups ;;
+        1) install_fresh_patched ;;
+        2) update_to_baseline ;;
+        3) apply_patches ;;
+        4) restore_backup ;;
+        5) delete_old_backups ;;
         0) echo ""; exit 0 ;;
         *) main_menu ;;
     esac

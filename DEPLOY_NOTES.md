@@ -95,7 +95,14 @@ Database column: `setting.appLinkIcons`
 curl -o apply-patches.sh -L https://raw.githubusercontent.com/TechElik/Mirzabot-Patches/main/apply-patches.sh
 sudo bash apply-patches.sh
 ```
-Choose option 1 (Apply) — it backs up automatically, replaces the files, runs `table.php`, and tunes PHP-FPM.
+The menu has 5 options — pick the one matching your situation:
+- **Option 1** — fresh install, no bot installed yet (runs our pre-patched `install.sh`)
+- **Option 2** — you have an older mirzabot version installed; brings it up to base 0.3.1 first (does not apply our patches by itself)
+- **Option 3** — you already have mirzabot 0.3.1 installed; applies our patches (auto-backup, replaces the files, runs `table.php`, tunes PHP-FPM)
+- **Option 4** — restore a previous backup
+- **Option 5** — delete old backups
+
+If you're on an older version, run option 2, then option 3 right after.
 
 ### Manually (if you don't want to use the script)
 1. Replace the 17 files listed above (leave `config.php` untouched)
