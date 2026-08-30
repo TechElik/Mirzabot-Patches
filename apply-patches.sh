@@ -20,7 +20,7 @@ FILES=(
     "admin.php" "function.php" "index.php" "table.php" "keyboard.php"
     "lang/fa.php"
     "api/miniapp.php" "api/users.php"
-    "cronbot/gift.php" "cronbot/lottery.php" "cronbot/payment_expire.php" "cronbot/plisio.php" "cronbot/uptime_panel.php"
+    "cronbot/gift.php" "cronbot/lottery.php" "cronbot/payment_expire.php" "cronbot/plisio.php" "cronbot/uptime_panel.php" "cronbot/backupbot.php"
     "vpnbot/Default/admin.php" "vpnbot/Default/index.php"
     "vpnbot/update/admin.php" "vpnbot/update/index.php"
 )
