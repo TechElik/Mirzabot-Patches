@@ -6,7 +6,7 @@
 
 ---
 
-## ۱. فایل‌های تغییریافته (۱۷ فایل، همه با `git pull` یا `apply-patches.sh` اعمال می‌شن)
+## ۱. فایل‌های تغییریافته (۱۸ فایل، همه با `git pull` یا `apply-patches.sh` اعمال می‌شن)
 
 ```
 admin.php
@@ -17,6 +17,7 @@ keyboard.php
 lang/fa.php
 api/miniapp.php
 api/users.php
+cronbot/backupbot.php
 cronbot/gift.php
 cronbot/lottery.php
 cronbot/payment_expire.php
