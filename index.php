@@ -3096,9 +3096,18 @@ if ($user['step'] == "createusertest" || preg_match('/locationtest_(.*)/', $data
             $helpidos['inline_keyboard'][] = [$nameButton];
         }
         if ($setting['linkappstatus'] == "1") {
-            $helpidos['inline_keyboard'][] = [
-                ['text' => $textbotlang['keyboard']['appDownloadLink'], 'callback_data' => "linkappdownlod"],
-            ];
+            $appDownloadBtn = ['text' => $textbotlang['keyboard']['appDownloadLink'], 'callback_data' => "linkappdownlod"];
+            $buttonIconsMap_local = [];
+            if (!empty($setting['buttonIcons'])) {
+                $decodedBtnIcons_local = json_decode($setting['buttonIcons'], true);
+                if (is_array($decodedBtnIcons_local)) {
+                    $buttonIconsMap_local = $decodedBtnIcons_local;
+                }
+            }
+            if (isset($buttonIconsMap_local['keyboard.appDownloadLink']) && $buttonIconsMap_local['keyboard.appDownloadLink'] !== '') {
+                $appDownloadBtn['icon_custom_emoji_id'] = (string) $buttonIconsMap_local['keyboard.appDownloadLink'];
+            }
+            $helpidos['inline_keyboard'][] = [$appDownloadBtn];
         }
         $helpidos['inline_keyboard'][] = [
             ['text' => $textbotlang['users']['backmenu'], 'callback_data' => "backuser"],

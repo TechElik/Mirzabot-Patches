@@ -1,43 +1,53 @@
-# mirzabot-patches
+# mirzabot (techelik fork)
 
 English | 🌐 [فارسی](./README.fa.md)
 
-Thanks to the [developer of mirzabot](https://github.com/mahdiMGF2/mirzabot) — these patches are applied on top of their free script, **version 0.3.1**. That exact version is required; other versions may not work correctly.
+Thanks to the [developer of mirzabot](https://github.com/mahdiMGF2/mirzabot) — this is a full fork of their **version 0.3.1**, with stability bug fixes and a complete animated Telegram Premium emoji system (buttons and message text) already built in.
 
-Use of this script is at the installer's own responsibility. The script itself backs up the bot's main folder on your server, but you should always take your own database backup as well.
+Full change details and the emoji usage guide: [DEPLOY_NOTES.md](./DEPLOY_NOTES.md)
 
-Custom patches for [mahdiMGF2/mirzabot](https://github.com/mahdiMGF2/mirzabot) — stability bug fixes plus full support for animated Telegram Premium emoji (on both buttons and message text).
+Use of these scripts is at the installer's own responsibility. Always back up your database before making any changes.
 
-## For a full guide on applying and inserting emoji, see the guide below
+---
 
-Full details: [DEPLOY_NOTES.md](./DEPLOY_NOTES.md)
+## Two install methods — which one do I need?
 
-## Quick install
+### 🆕 Method 1: Fresh full install (if you don't have the bot installed at all)
 
-After launching the main installer's menu, make sure to select **version 0.3.1** from menu option 2. If you already have that version installed, skip straight to the patch-install step. Other versions may not work correctly with these patches — always back up your SQL database first regardless.
-
-The patch script itself backs up the bot's main folder before making changes, storing the backup alongside the bot's own folder. You can restore it at any time from the script's own menu.
+This runs the **same official mirzabot installer**, except every file already includes the stability fixes and premium-emoji features — no separate patch step needed.
 
 ```bash
-# 1. Standard mirzabot install (from the official repo) — pick version 0.3.1 from the menu
-curl -o install.sh -L https://raw.githubusercontent.com/mahdiMGF2/mirzabot/main/install.sh && bash mirza install --version 0.3.1
+curl -o install.sh -L https://raw.githubusercontent.com/TechElik/Mirzabot-Patches/main/install.sh && bash install.sh
 ```
 
+After launching it, just follow the standard mirzabot install menu as usual (domain, bot token, database info, etc.).
+
+### 🔧 Method 2: Patch only (if you already have mirzabot 0.3.1 installed)
+
+If you already installed the bot and just want to add these fixes and emoji features **on top of your existing install**, without reinstalling:
+
 ```bash
-# 2. Apply these patches
-curl -o apply-patches.sh -L https://raw.githubusercontent.com/techelik/mirzabot-patches/main/apply-patches.sh
+curl -o apply-patches.sh -L https://raw.githubusercontent.com/TechElik/Mirzabot-Patches/main/apply-patches.sh
 sudo bash apply-patches.sh
 ```
 
-## What these patches add
+Choose "Apply custom patches" from the menu. The script backs everything up before making any change, and can restore it as well.
+
+**⚠️ Important:** these patches were only tested against version **0.3.1**. Other versions may not work correctly — always back up your SQL database first regardless.
+
+---
+
+## What this fork adds
 
 - Fixes the `parse_mode` case-sensitivity bug (which prevented HTML tags / premium emoji from rendering at all)
 - Removes the risk of the service hanging in payment-gateway API calls
 - Automatically tunes PHP-FPM for better stability
 - A complete premium-emoji management system, built entirely inside the bot itself, covering:
-  - Main keyboard buttons
+  - Main keyboard buttons (including the app download link)
   - Tutorial categories and individual tutorial names
   - Shop products and shop categories
   - Free-form message text (rules, welcome message, etc.)
 
-This project is not a full fork; it runs alongside the official mirzabot install and never touches `config.php`.
+## Mandatory Telegram requirement
+
+The account that created the bot in BotFather (the actual owner) must have an active **Telegram Premium** subscription, otherwise the emoji won't render as animated.

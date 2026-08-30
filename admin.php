@@ -2882,6 +2882,7 @@ elseif ($datain == "systemsms") {
         sendmessage($from_id, "توی پیامت هیچ ایموجی پرمیومی پیدا نکردم. یه ایموجی پرمیوم متحرک واقعی بفرست.", $backadmin, 'HTML');
         return;
     }
+    clearSelectCache("setting");
     $setting_now = select("setting", "*", null, null, "select");
     $prodicons = [];
     if (!empty($setting_now['productIcons'])) {
@@ -2948,6 +2949,7 @@ elseif ($datain == "systemsms") {
         sendmessage($from_id, "توی پیامت هیچ ایموجی پرمیومی پیدا نکردم. یه ایموجی پرمیوم متحرک واقعی بفرست.", null, 'HTML');
         return;
     }
+    clearSelectCache("setting");
     $setting_now = select("setting", "*", null, null, "select");
     $shopicons = [];
     if (!empty($setting_now['shopCategoryIcons'])) {
@@ -6175,6 +6177,7 @@ if ($datain == "settimecornremove" && $adminrulecheck['rule'] == "administrator"
         sendmessage($from_id, "توی پیامت هیچ ایموجی پرمیومی پیدا نکردم. یه ایموجی پرمیوم متحرک واقعی بفرست.", $backadmin, 'HTML');
         return;
     }
+    clearSelectCache("setting");
     $setting_now = select("setting", "*", null, null, "select");
     $icons = [];
     if (!empty($setting_now['helpCategoryIcons'])) {
@@ -6211,6 +6214,7 @@ if ($datain == "settimecornremove" && $adminrulecheck['rule'] == "administrator"
         sendmessage($from_id, "توی پیامت هیچ ایموجی پرمیومی پیدا نکردم. یه ایموجی پرمیوم متحرک واقعی بفرست.", $backadmin, 'HTML');
         return;
     }
+    clearSelectCache("setting");
     $setting_now = select("setting", "*", null, null, "select");
     $nameicons = [];
     if (!empty($setting_now['helpNameIcons'])) {
@@ -10830,6 +10834,59 @@ if ($datain == "settimecornday" && $adminrulecheck['rule'] == "administrator") {
     $userdata = json_decode($user['Processing_value'], true);
     sendmessage($from_id, $textbotlang['Admin']['apps']['updated'], $keyboardlinkapp, 'HTML');
     update("app", "link", $text, "name", $userdata['nameapp']);
+} elseif ($text == "🎨 آیکون برنامه" && $adminrulecheck['rule'] == "administrator") {
+    $approws = select("app", "*", null, null, "fetchAll");
+    if (empty($approws)) {
+        sendmessage($from_id, "هیچ برنامه‌ای پیدا نشد.", $keyboardlinkapp, 'HTML');
+        return;
+    }
+    $appkeyboard = ['inline_keyboard' => []];
+    foreach ($approws as $r) {
+        $appkeyboard['inline_keyboard'][] = [
+            ['text' => $r['name'], 'callback_data' => "appicon_select:" . $r['id']]
+        ];
+    }
+    $appkeyboard['inline_keyboard'][] = [['text' => '❌ بستن', 'callback_data' => 'bt_close']];
+    sendmessage($from_id, "کدوم برنامه رو می‌خوای آیکون بدی؟", json_encode($appkeyboard), 'HTML');
+} elseif (preg_match('/^appicon_select:([0-9]+)$/', $datain, $dataget)) {
+    $approw = select("app", "*", "id", $dataget[1], "select");
+    if (!$approw) {
+        sendmessage($from_id, "این برنامه پیدا نشد، دوباره از منو امتحان کن.", null, 'HTML');
+        return;
+    }
+    savedata("clear", "appicon_selected_id", $approw['id']);
+    savedata("save", "appicon_selected_name", $approw['name']);
+    step("get_app_icon_emoji", $from_id);
+    sendmessage($from_id, "همون ایموجی پرمیوم متحرکی که می‌خوای برای برنامه‌ی «" . $approw['name'] . "» استفاده بشه رو مستقیم اینجا بفرست (یا فوروارد کن).", null, 'HTML');
+} elseif ($user['step'] == "get_app_icon_emoji") {
+    $userdata = json_decode((string) ($user['Processing_value'] ?? ''), true);
+    $appid = $userdata['appicon_selected_id'] ?? '';
+    $appname = $userdata['appicon_selected_name'] ?? '';
+    $msgentities = $update['message']['entities'] ?? [];
+    $foundid = null;
+    foreach ($msgentities as $ent) {
+        if (($ent['type'] ?? '') == 'custom_emoji' && !empty($ent['custom_emoji_id'])) {
+            $foundid = $ent['custom_emoji_id'];
+            break;
+        }
+    }
+    if ($foundid === null || $appid === '') {
+        sendmessage($from_id, "توی پیامت هیچ ایموجی پرمیومی پیدا نکردم. یه ایموجی پرمیوم متحرک واقعی بفرست.", null, 'HTML');
+        return;
+    }
+    clearSelectCache("setting");
+    $setting_now = select("setting", "*", null, null, "select");
+    $appicons = [];
+    if (!empty($setting_now['appLinkIcons'])) {
+        $decoded = json_decode($setting_now['appLinkIcons'], true);
+        if (is_array($decoded)) {
+            $appicons = $decoded;
+        }
+    }
+    $appicons[(string) $appid] = $foundid;
+    update("setting", "appLinkIcons", json_encode($appicons, JSON_UNESCAPED_UNICODE), null, null);
+    step('home', $from_id);
+    sendmessage($from_id, "✅ آیکون برنامه‌ی «" . $appname . "» ذخیره شد.", $keyboardlinkapp, 'HTML');
 } elseif ($datain == "nowpaymentsetting") {
     sendmessage($from_id, $textbotlang['users']['selectoption'], $nowpayment_setting_keyboard, 'HTML');
 } elseif ($text == $textbotlang['keyboard']['autoConfirmNoCheckTime']) {
@@ -11083,6 +11140,7 @@ if ($datain == "settimecornday" && $adminrulecheck['rule'] == "administrator") {
         'textbot.wheelLuck' => 'دکمه: گردونه شانس',
         'textbot.faq' => 'دکمه: سؤالات متداول',
         'keyboard.sendMessageToSupport' => 'دکمه: ارسال پیام به پشتیبانی',
+        'keyboard.appDownloadLink' => 'دکمه: لینک دانلود برنامه',
     ];
     $btnkeyboard = ['inline_keyboard' => []];
     foreach ($btnIconItems as $itemKey => $label) {
@@ -11126,6 +11184,7 @@ if ($datain == "settimecornday" && $adminrulecheck['rule'] == "administrator") {
         sendmessage($from_id, "توی پیامت هیچ ایموجی پرمیومی پیدا نکردم. یه ایموجی پرمیوم متحرک واقعی بفرست، یا دوباره از منو شروع کن.", null, 'HTML');
         return;
     }
+    clearSelectCache("setting");
     $setting_now = select("setting", "*", null, null, "select");
     $btnicons = [];
     if (!empty($setting_now['buttonIcons'])) {

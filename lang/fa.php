@@ -84,6 +84,10 @@ return [
                                 'key' => 'keyboard.sendMessageToSupport',
                         ],
                         [
+                                'label' => 'دکمه: لینک دانلود برنامه',
+                                'key' => 'keyboard.appDownloadLink',
+                        ],
+                        [
                                 'label' => 'پیام بعد از خرید',
                                 'key' => 'textbot.afterPay',
                         ],

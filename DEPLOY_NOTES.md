@@ -77,20 +77,29 @@ Database columns: `setting.helpCategoryIcons`, `setting.helpNameIcons`
 
 Database columns: `setting.productIcons`, `setting.shopCategoryIcons`
 
+### d) App download links
+Path: admin panel → app management menu (next to "🔗 Add app" and "✏️ Edit app") → the "🎨 App icon" button (shows a list of all apps, pick one)
+
+Both the entry button's text ("🔗 App download link") and its icon can be changed from "✏️ Edit Bot Texts" and "🎨 Keyboard Button Icons" respectively — that's separate from the icon of each individual app inside the list.
+
+Each app is identified by its real `id` from the `app` table (not its name), so multiple apps sharing the same display name never collide.
+
+Database column: `setting.appLinkIcons`
+
 ---
 
 ## 4. What to do after every install/update
 
 ### With the script (recommended)
 ```bash
-curl -o apply-patches.sh -L https://raw.githubusercontent.com/techelik/mirzabot-patches/main/apply-patches.sh
+curl -o apply-patches.sh -L https://raw.githubusercontent.com/TechElik/Mirzabot-Patches/main/apply-patches.sh
 sudo bash apply-patches.sh
 ```
 Choose option 1 (Apply) — it backs up automatically, replaces the files, runs `table.php`, and tunes PHP-FPM.
 
 ### Manually (if you don't want to use the script)
 1. Replace the 17 files listed above (leave `config.php` untouched)
-2. Run `php8.2 table.php` (for the new columns: `helpCategoryIcons`, `helpNameIcons`, `buttonIcons`, `productIcons`, `shopCategoryIcons`)
+2. Run `php8.2 table.php` (for the new columns: `helpCategoryIcons`, `helpNameIcons`, `buttonIcons`, `productIcons`, `shopCategoryIcons`, `appLinkIcons`)
 3. Apply the PHP-FPM settings manually (section 2 of this file)
 4. `sudo systemctl restart php8.2-fpm`
 

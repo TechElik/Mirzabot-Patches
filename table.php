@@ -271,6 +271,7 @@ timeauto_not_verify,status_keyboard_config,cron_status
         addFieldToTable("setting", "buttonIcons", null, "TEXT");
         addFieldToTable("setting", "shopCategoryIcons", null, "TEXT");
         addFieldToTable("setting", "productIcons", null, "TEXT");
+        addFieldToTable("setting", "appLinkIcons", null, "TEXT");
     }
 } catch (Exception $e) {
     file_put_contents('error_log', $e->getMessage());

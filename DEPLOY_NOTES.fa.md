@@ -77,20 +77,29 @@ vpnbot/update/index.php
 
 ستون‌های دیتابیس: `setting.productIcons`, `setting.shopCategoryIcons`
 
+### د) لینک‌های دانلود برنامه‌ها
+مسیر: پنل ادمین → منوی مدیریت برنامه‌ها (کنار «🔗 اضافه کردن برنامه» و «✏️ ویرایش برنامه») → دکمه‌ی «🎨 آیکون برنامه» (لیست همه‌ی برنامه‌ها رو نشون می‌ده، یکی رو انتخاب کن)
+
+هم متن دکمه‌ی ورودی («🔗 لینک دانلود برنامه») از منوی «✏️ ویرایش متن‌های ربات» قابل تغییره، هم آیکونش از «🎨 آیکون دکمه‌های کیبورد» — این جدا از آیکون خودِ برنامه‌های داخل لیسته.
+
+شناسه‌ی هر برنامه بر پایه‌ی `id` واقعی ردیفش در جدول `app` ذخیره می‌شه (نه اسم)، تا در صورت وجود چند برنامه با اسم مشابه، هیچ برخوردی پیش نیاد.
+
+ستون دیتابیس: `setting.appLinkIcons`
+
 ---
 
 ## ۴. کارهایی که باید بعد از هر نصب/آپدیت انجام بشن
 
 ### با اسکریپت (پیشنهادی)
 ```bash
-curl -o apply-patches.sh -L https://raw.githubusercontent.com/techelik/mirzabot-patches/main/apply-patches.sh
+curl -o apply-patches.sh -L https://raw.githubusercontent.com/TechElik/Mirzabot-Patches/main/apply-patches.sh
 sudo bash apply-patches.sh
 ```
 گزینه‌ی ۱ (Apply) رو بزن — خودش بکاپ می‌گیره، فایل‌ها رو جایگزین می‌کنه، `table.php` رو اجرا می‌کنه، و PHP-FPM رو تنظیم می‌کنه.
 
 ### دستی (اگه اسکریپت رو نمی‌خوای)
 ۱. ۱۷ فایل بالا رو جایگزین کن (`config.php` رو دست نزن)
-۲. `php8.2 table.php` رو اجرا کن (برای ستون‌های جدید: `helpCategoryIcons`, `helpNameIcons`, `buttonIcons`, `productIcons`, `shopCategoryIcons`)
+۲. `php8.2 table.php` رو اجرا کن (برای ستون‌های جدید: `helpCategoryIcons`, `helpNameIcons`, `buttonIcons`, `productIcons`, `shopCategoryIcons`, `appLinkIcons`)
 ۳. تنظیمات PHP-FPM رو دستی بزن (بخش ۲ همین فایل)
 ۴. `sudo systemctl restart php8.2-fpm`
 

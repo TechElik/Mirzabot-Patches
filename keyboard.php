@@ -574,9 +574,11 @@ foreach ($helpRows as $result) {
     $helpcwtgory['inline_keyboard'][] = [$categoryButton];
 }
 if ($setting['linkappstatus'] == "1") {
-    $helpcwtgory['inline_keyboard'][] = [
-        ['text' => $textbotlang['keyboard']['appDownloadLink'], 'callback_data' => "linkappdownlod"],
-    ];
+    $appDownloadBtn = ['text' => $textbotlang['keyboard']['appDownloadLink'], 'callback_data' => "linkappdownlod"];
+    if (isset($buttonIconsMap['keyboard.appDownloadLink']) && $buttonIconsMap['keyboard.appDownloadLink'] !== '') {
+        $appDownloadBtn['icon_custom_emoji_id'] = (string) $buttonIconsMap['keyboard.appDownloadLink'];
+    }
+    $helpcwtgory['inline_keyboard'][] = [$appDownloadBtn];
 }
 $helpcwtgory['inline_keyboard'][] = [
     ['text' => $textbotlang['users']['backbtn'], 'callback_data' => "backuser"],
@@ -587,10 +589,19 @@ $json_list_helpـcategory = json_encode($helpcwtgory);
 //------------------  [ help app ]----------------//
 $appRows = $pdo->query("SELECT * FROM app")->fetchAll(PDO::FETCH_ASSOC);
 $helpapp = ['inline_keyboard' => []];
+$appLinkIconsMap = [];
+if (!empty($setting['appLinkIcons'])) {
+    $decodedAppIcons = json_decode($setting['appLinkIcons'], true);
+    if (is_array($decodedAppIcons)) {
+        $appLinkIconsMap = $decodedAppIcons;
+    }
+}
 foreach ($appRows as $result) {
-    $helpapp['inline_keyboard'][] = [
-        ['text' => $result['name'], 'url' => $result['link']]
-    ];
+    $appBtn = ['text' => $result['name'], 'url' => $result['link']];
+    if (isset($appLinkIconsMap[(string) $result['id']]) && $appLinkIconsMap[(string) $result['id']] !== '') {
+        $appBtn['icon_custom_emoji_id'] = (string) $appLinkIconsMap[(string) $result['id']];
+    }
+    $helpapp['inline_keyboard'][] = [$appBtn];
 }
 $helpapp['inline_keyboard'][] = [
     ['text' => $textbotlang['users']['backbtn'], 'callback_data' => "backuser"],
@@ -1342,6 +1353,7 @@ $keyboardlinkapp = json_encode([
     'keyboard' => [
         [['text' => $textbotlang['keyboard']['addApp']], ['text' => $textbotlang['keyboard']['deleteApp']]],
         [['text' => $textbotlang['keyboard']['editApp']]],
+        [['text' => '🎨 آیکون برنامه']],
         [['text' => $textbotlang['Admin']['backAdminBtn']], ['text' => $textbotlang['Admin']['backMenuBtn']]]
     ],
     'resize_keyboard' => true
