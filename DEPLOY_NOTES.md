@@ -99,7 +99,7 @@ The menu has 5 options — pick the one matching your situation:
 - **Option 1** — fresh install, no bot installed yet (runs our pre-patched `install.sh`)
 - **Option 2** — you have an older mirzabot version installed; brings it up to base 0.3.1 first (does not apply our patches by itself)
 - **Option 3** — you already have mirzabot 0.3.1 installed; applies our patches (auto-installatin folder and database backup, replaces the files, runs `table.php`, tunes PHP-FPM)
-- **Option 4** — restore a previous backup
+- **Option 4** — restore a previous backup (only installationfolder backups)
 - **Option 5** — delete old backups (only installationfolder backups)
 
 If you're on an older version, run option 2, then option 3 right after.
