@@ -103,12 +103,43 @@ function apply_patches() {
     echo -e "${C_KEY}▶ Apply patches${CR}\n"
     require_bot_installed || { main_menu; return; }
 
-    local backup_dir="${BACKUP_ROOT}/mirzaprobotconfig_backup_$(date +%F_%H%M)"
-    echo -e "  ${C_DIM}[1/5]${CR} Backing up the current bot folder..."
-    cp -r "$BOT_DIR" "$backup_dir"
-    echo -e "        ${C_OK}✓${CR} Backup saved to: ${C_DIM}${backup_dir}${CR}"
+    # ── ۱. بکاپ از دیتابیس ──────────────────────────────────
+    echo -e "  ${C_DIM}[1/6]${CR} Backing up database..."
+    local dbhost=$(grep '^\$dbhost' "$BOT_DIR/config.php" | cut -d"'" -f2)
+    local dbname=$(grep '^\$dbname' "$BOT_DIR/config.php" | cut -d"'" -f2)
+    local dbuser=$(grep '^\$usernamedb' "$BOT_DIR/config.php" | cut -d"'" -f2)
+    local dbpass=$(grep '^\$passworddb' "$BOT_DIR/config.php" | cut -d"'" -f2)
+    [ -z "$dbhost" ] && dbhost="localhost"
 
-    echo -e "  ${C_DIM}[2/5]${CR} Downloading and applying patched files..."
+    if [ -n "$dbname" ] && [ -n "$dbuser" ] && [ -n "$dbpass" ]; then
+        local db_backup="/root/mirza-backup-$(date +%Y-%m-%d-%H-%M-%S).sql"
+        if mysqldump -h "$dbhost" -u "$dbuser" -p"$dbpass" --no-tablespaces --ssl-mode=DISABLED "$dbname" > "$db_backup" 2>/dev/null; then
+            echo -e "        ${C_OK}✓${CR} Database backup saved to: ${C_DIM}${db_backup}${CR}"
+            
+            local bot_token=$(grep '^\$APIKEY' "$BOT_DIR/config.php" | cut -d"'" -f2)
+            local admin_id=$(grep '^\$adminnumber' "$BOT_DIR/config.php" | cut -d"'" -f2)
+            if [ -n "$bot_token" ] && [ -n "$admin_id" ]; then
+                curl -s -X POST "https://api.telegram.org/bot$bot_token/sendDocument" \
+                    -F "chat_id=$admin_id" \
+                    -F "document=@$db_backup" \
+                    -F "caption=📦 Database Backup before applying patches" > /dev/null
+                echo -e "        ${C_OK}✓${CR} Database backup sent to Telegram"
+            fi
+        else
+            echo -e "        ${C_WARN}!${CR} Database backup failed (check credentials). Continuing with folder backup."
+        fi
+    else
+        echo -e "        ${C_WARN}!${CR} Could not read database credentials. Skipping database backup."
+    fi
+
+    # ── ۲. بکاپ از پوشه ──────────────────────────────────────
+    local backup_dir="${BACKUP_ROOT}/mirzaprobotconfig-backup-$(date +%F-%H%M)"
+    echo -e "  ${C_DIM}[2/6]${CR} Backing up the current bot folder..."
+    cp -r "$BOT_DIR" "$backup_dir"
+    echo -e "        ${C_OK}✓${CR} Folder backup saved to: ${C_DIM}${backup_dir}${CR}"
+
+    # ── ۳. دانلود و اعمال وصله‌ها ──────────────────────────
+    echo -e "  ${C_DIM}[3/6]${CR} Downloading and applying patched files..."
     local fail=0
     for f in "${FILES[@]}"; do
         mkdir -p "$BOT_DIR/$(dirname "$f")"
@@ -126,10 +157,12 @@ function apply_patches() {
         return
     fi
 
-    echo -e "  ${C_DIM}[3/5]${CR} Running database migration..."
+    # ── ۴. اجرای migration دیتابیس ──────────────────────────
+    echo -e "  ${C_DIM}[4/6]${CR} Running database migration..."
     (cd "$BOT_DIR" && php8.2 table.php) && echo -e "        ${C_OK}✓${CR} table.php executed" || echo -e "        ${C_WARN}!${CR} table.php reported a warning"
 
-    echo -e "  ${C_DIM}[4/5]${CR} Tuning PHP-FPM for stability..."
+    # ── ۵. تنظیمات PHP-FPM ──────────────────────────────────
+    echo -e "  ${C_DIM}[5/6]${CR} Tuning PHP-FPM for stability..."
     if [ -f "$FPM_POOL" ]; then
         grep -q "^request_terminate_timeout" "$FPM_POOL" \
             && sed -i 's/^request_terminate_timeout.*/request_terminate_timeout = 30s/' "$FPM_POOL" \
@@ -141,7 +174,8 @@ function apply_patches() {
         echo -e "        ${C_WARN}!${CR} Pool file not found, step skipped"
     fi
 
-    echo -e "  ${C_DIM}[5/5]${CR} Restoring file ownership..."
+    # ── ۶. تنظیم مالکیت فایل‌ها ─────────────────────────────
+    echo -e "  ${C_DIM}[6/6]${CR} Restoring file ownership..."
     chown -R www-data:www-data "$BOT_DIR"
     echo -e "        ${C_OK}✓${CR} Done"
 
@@ -152,7 +186,7 @@ function apply_patches() {
 }
 
 function list_backups() {
-    find "$BACKUP_ROOT" -maxdepth 1 -type d -name "mirzaprobotconfig_backup_*" 2>/dev/null | sort -r
+    find "$BACKUP_ROOT" -maxdepth 1 -type d -name "mirzaprobotconfig-backup-*" 2>/dev/null | sort -r
 }
 
 function restore_backup() {
@@ -204,7 +238,7 @@ function restore_backup() {
 
     echo -e "\n  ${C_DIM}[1/3]${CR} Setting the current version aside..."
     if [ -d "$BOT_DIR" ]; then
-        mv "$BOT_DIR" "${BOT_DIR}_replaced_$(date +%F_%H%M)"
+        mv "$BOT_DIR" "${BOT_DIR}_replaced_$(date +%F-%H%M)"
     fi
 
     echo -e "  ${C_DIM}[2/3]${CR} Restoring from backup..."
