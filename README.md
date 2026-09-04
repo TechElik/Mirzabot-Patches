@@ -9,7 +9,18 @@ Full change details and the emoji usage guide: [DEPLOY_NOTES.md](./DEPLOY_NOTES.
 Use of these scripts is at the installer's own responsibility. Always back up your database before making any changes.
 
 ---
+## 💰 Donate with Crypto (Tether - USDT)
 
+If you'd like to support this project, you can send USDT (BEP-20) to the address below:
+
+**Network:** Binance Smart Chain (BEP-20)  
+**Token:** USDT  
+**Address:**  
+`0x7228878997d616D14789B1669a5c30769DCc4d7f`
+
+> ⚠️ Please double-check the address before sending. Only send **USDT (BEP-20)** to this address.
+> 
+---
 ## Install methods — which one do I need?
 
 There are two ways to get a fully patched bot: run our `install.sh` directly for a one-shot fresh install, or run `apply-patches.sh`, which gives you an interactive menu covering every scenario (fresh install, updating an old version, patching an existing 0.3.1 install, and backup management).
